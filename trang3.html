@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Khoảnh Khắc Của Chúng Ta</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffcce6;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .glow {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, #ffcce6 70%);
+      z-index: -1;
+      animation: glowPulse 3s infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from { opacity: 0.3; }
+      to { opacity: 0.7; }
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 80vh;
+      width: 100%;
+      position: relative;
+    }
+
+    .scene-container {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1000px;
+    }
+
+    .scene {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      transform-style: preserve-3d;
+      animation: rotate 20s infinite linear;
+      transform-origin: center center;
+    }
+
+    @keyframes rotate {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+
+    .photo {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      border: 3px solid #ff66b3;
+      box-shadow: 0 0 15px #ff3399;
+      object-fit: cover;
+      transition: all 0.5s;
+      transform-style: preserve-3d;
+      left: 50%;
+      top: 50%;
+      transform-origin: center center;
+    }
+
+    .photo:hover {
+      transform: scale(1.1) rotateY(180deg);
+      box-shadow: 0 0 25px #ff0066;
+    }
+
+    .center-heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 80px;
+      color: #ff0066;
+      text-shadow: 0 0 20px #ff3399;
+      animation: heartbeat 1.5s infinite;
+      z-index: 10;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    .heart {
+      position: fixed;
+      pointer-events: none;
+      animation: float 6s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(-100px) rotate(180deg);
+        opacity: 0.7;
+      }
+    }
+
+    .back-btn {
+      margin-top: 20px;
+      padding: 15px 35px;
+      background-color: #ff3399;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s;
+      z-index: 20;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .back-btn:hover {
+      background-color: #e60073;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+
+  <div class="main-content">
+    <div class="scene-container">
+      <div class="scene" id="scene">
+        <div class="center-heart">❤</div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='trang2.html'">Quay Lại ❤</button>
+  </div>
+
+  <script>
+    // Hiệu ứng trái tim bay
+    function createHearts() {
+      const colors = ['#ff66b3', '#ff99cc', '#ff3399', '#ff0066', '#ff99ff'];
+      const numHearts = 50;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      for (let i = 0; i < numHearts; i++) {
+        const heart = document.createElement('div');
+        heart.innerHTML = '❤';
+        heart.classList.add('heart');
+        
+        // Kích thước ngẫu nhiên
+        const size = Math.random() * 20 + 10;
+        heart.style.fontSize = `${size}px`;
+        
+        // Màu sắc ngẫu nhiên
+        heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Vị trí ngẫu nhiên trên toàn màn hình
+        const x = Math.random() * screenWidth;
+        const y = Math.random() * screenHeight;
+        heart.style.left = `${x}px`;
+        heart.style.top = `${y}px`;
+        
+        // Animation ngẫu nhiên
+        const duration = Math.random() * 6 + 3;
+        const delay = Math.random() * 3;
+        heart.style.animationDuration = `${duration}s`;
+        heart.style.animationDelay = `${delay}s`;
+        
+        // Thêm vào body
+        document.body.appendChild(heart);
+      }
+    }
+
+    // Tạo thư viện ảnh quay 3D
+    function createPhotoGallery() {
+      const scene = document.getElementById('scene');
+      const photos = ['crush1.jpg', 'crush2.jpg', 'crush3.jpg', 'crush4.jpg', 'crush5.jpg'];
+      const radius = 150; // Bán kính vòng tròn
+      const angleIncrement = (2 * Math.PI) / photos.length;
+
+      photos.forEach((photo, index) => {
+        const img = document.createElement('img');
+        img.src = photo;
+        img.classList.add('photo');
+        const angle = angleIncrement * index;
+        const x = radius * Math.cos(angle);
+        const z = radius * Math.sin(angle);
+        img.style.transform = `translate(-50%, -50%) translateX(${x}px) translateZ(${z}px) rotateY(${-angle * (180 / Math.PI)}deg)`;
+        scene.appendChild(img);
+      });
+    }
+
+    // Gọi khi trang tải
+    window.onload = function () {
+      createHearts();
+      createPhotoGallery();
+    };
+
+    // Dừng xoay khi hover
+    const scene = document.getElementById('scene');
+    scene.addEventListener('mouseenter', () => {
+      scene.style.animationPlayState = 'paused';
+    });
+    scene.addEventListener('mouseleave', () => {
+      scene.style.animationPlayState = 'running';
+    });
+  </script>
+</body>
+</html>
